@@ -1,0 +1,16 @@
+curl -X POST
+    -H 'Authorization: 835a68e5ee504c1eb91d72e4327199b5'
+    -H "Content-Type: application/json"
+    -d '
+    {
+      "inputs": [
+        {
+          "data": {
+            "image": {
+              "url": "https://samples.clarifai.com/food.jpg"
+            }
+          }
+        }
+      ]
+    }'
+    https://api.clarifai.com/v2/models/bd367be194cf45149e75f01d59f77ba7/outputs

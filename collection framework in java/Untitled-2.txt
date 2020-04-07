@@ -1,0 +1,146 @@
+2020-01-19 20:15:49,738 unitTesting  INFO     Running pytest
+2020-01-19 20:15:58,257 unitTesting  INFO     ============================= test session starts ==============================
+platform linux -- Python 3.6.9, pytest-5.3.1, py-1.8.0, pluggy-0.12.0
+Django settings: qeats.settings (from ini file)
+rootdir: /kumarpradeep2008-1-ME_QEATS_REVIEW_MP-776c2e4c-3af8-11ea-922d-c385861c27d4/kumarpradeep2008-1-ME_QEATS_REVIEW_MP, inifile: pytest.ini
+plugins: django-3.5.1, mock-1.10.4
+collected 3 items
+
+tests/test_views.py FFF                                                  [100%]
+
+=================================== FAILURES ===================================
+______________ TestSocialSharing.test_post_to_facebook_share_cli _______________
+
+self = <tests.test_views.TestSocialSharing object at 0x3e51c80afa90>
+
+    def test_post_to_facebook_share_cli(self):
+    
+        facebook = restaurants.facebook_post.Facebook()
+        image_url = 'http://ksmartstatic.sify.com/cmf-1.0.0/appflow/bawarchi.com/Image/oeturjecjjdah_bigger.jpg'
+        my_name = 'Arun'
+    
+        message = my_name + ' likes this ice-cream!'
+        facebook.publish_photo_msg(message, image_url)
+    
+        facebook_test_util = FacebookTestUtil()
+>       assert facebook_test_util.check_whether_message_is_published(message, image_url)
+
+tests/test_views.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tests.test_views.FacebookTestUtil object at 0x3e51cd08c6d8>
+message = 'Arun likes this ice-cream!'
+image_path = 'http://ksmartstatic.sify.com/cmf-1.0.0/appflow/bawarchi.com/Image/oeturjecjjdah_bigger.jpg'
+
+    def check_whether_message_is_published(self, message, image_path):
+        user_feeds = self.get_user_feed()
+        for feed in user_feeds['data']:
+            if 'attachments' in feed:
+>               if feed['message'] == message:
+E               KeyError: 'message'
+
+tests/test_views.py:116: KeyError
+----------------------------- Captured stdout call -----------------------------
+<Response [400]>
+Get user feed url =  https://graph.facebook.com/112517623526330/feed?access_token=EAAKAuzVo6KcBAIuWb5hP1D4JMD0u8rrTsRCRF5zaQDUm5CH475K4CLKLRaHKV9puI14FXdC9o4i4xp4zuZBJZCqNTcjnMKnNXzaPdBetMPQGqNCrfzQilrDhuq8naw5cO0kShBf7G9QqRuLYLf3yiTgZAz2ZBGWTDYg9vZC6QLgZDZD&fields=id,message,attachments
+________________ TestSocialSharing.test_post_to_facebook_share _________________
+
+self = <tests.test_views.TestSocialSharing object at 0x3e51c806d860>
+
+    def test_post_to_facebook_share(self):
+        client = Client()
+    
+        prefix = os.getenv('USER_SOLUTION')
+        if prefix is None:
+            prefix = '.'
+    
+        image_path = prefix + '/tests/sneakpeak.jpg'
+        img_b64 = restaurants.image_uploader.file_path_to_img64(image_path)
+        import datetime
+        message = 'Great Work!!! Completed module 1 @ {}'.format(str(datetime.datetime.now()))
+        request_body = {
+                        'imgBase64' : img_b64.decode('utf-8'),
+                        'text' : message,
+                        'orderId' : '0x12312',
+                        'tags' : ['Facebook', 'Module1'],
+                        'share' : ['Facebook']
+                        }
+    
+        resp = client.post(r'/qeats/v1/review/share', data=request_body, content_type='application/json')
+        assert resp.status_code == 200
+        facebook_test_util = FacebookTestUtil()
+        message_expected = message + ' #Facebook #Module1'
+>       assert facebook_test_util.check_whether_message_is_published(message_expected, image_path)
+
+tests/test_views.py:169: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tests.test_views.FacebookTestUtil object at 0x3e51c7c67b38>
+message = 'Great Work!!! Completed module 1 @ 2020-01-19 20:15:54.455629 #Facebook #Module1'
+image_path = '/kumarpradeep2008-1-ME_QEATS_REVIEW_MP-776c2e4c-3af8-11ea-922d-c385861c27d4/kumarpradeep2008-1-ME_QEATS_REVIEW_MP/tests/sneakpeak.jpg'
+
+    def check_whether_message_is_published(self, message, image_path):
+        user_feeds = self.get_user_feed()
+        for feed in user_feeds['data']:
+            if 'attachments' in feed:
+>               if feed['message'] == message:
+E               KeyError: 'message'
+
+tests/test_views.py:116: KeyError
+----------------------------- Captured stdout call -----------------------------
+<Response [400]>
+Get user feed url =  https://graph.facebook.com/112517623526330/feed?access_token=EAAKAuzVo6KcBAIuWb5hP1D4JMD0u8rrTsRCRF5zaQDUm5CH475K4CLKLRaHKV9puI14FXdC9o4i4xp4zuZBJZCqNTcjnMKnNXzaPdBetMPQGqNCrfzQilrDhuq8naw5cO0kShBf7G9QqRuLYLf3yiTgZAz2ZBGWTDYg9vZC6QLgZDZD&fields=id,message,attachments
+________________ TestSocialSharing.test_post_to_pinterest_share ________________
+
+self = <tests.test_views.TestSocialSharing object at 0x3e51c794ff60>
+
+    def test_post_to_pinterest_share(self):
+        client = Client()
+        prefix = os.getenv('USER_SOLUTION')
+        if prefix is None:
+            prefix = '.'
+    
+        image_path = prefix + '/tests/sneakpeak.jpg'
+        img_b64 = restaurants.image_uploader.file_path_to_img64(image_path)
+        import datetime
+        message = 'Great Work!!! Completed module 2 @ {}'.format(str(datetime.datetime.now()))
+        request_body = {
+                        'imgBase64' : img_b64.decode('utf-8'),
+                        'text' : message,
+                        'orderId' : '0x12312',
+                        'tags' : ['Pinterest', 'Module2'],
+                        'share' : ['Pinterest']
+                        }
+        resp = client.post(r'/qeats/v1/review/share', data=request_body, content_type='application/json')
+        resp.status_code == 200
+        pinterest_test_util = PinterestTestUtil()
+        message_expected = message + ' #Pinterest #Module2'
+>       assert pinterest_test_util.check_whether_message_is_published(message_expected, image_path)
+E       AssertionError: assert False
+E        +  where False = <bound method PinterestTestUtil.check_whether_message_is_published of <tests.test_views.PinterestTestUtil object at 0x3e51c797e5f8>>('Great Work!!! Completed module 2 @ 2020-01-19 20:15:57.233544 #Pinterest #Module2', '/kumarpradeep2008-1-ME_QEATS_REVIEW_MP-776c2e4c-3af8-11ea-922d-c385861c27d4/kumarpradeep2008-1-ME_QEATS_REVIEW_MP/tests/sneakpeak.jpg')
+E        +    where <bound method PinterestTestUtil.check_whether_message_is_published of <tests.test_views.PinterestTestUtil object at 0x3e51c797e5f8>> = <tests.test_views.PinterestTestUtil object at 0x3e51c797e5f8>.check_whether_message_is_published
+
+tests/test_views.py:195: AssertionError
+----------------------------- Captured stdout call -----------------------------
+<Response [201]>
+====================================================================================================
+
+
+
+Pinterest API: Looks you have hit the per hour API limit
+
+
+
+====================================================================================================
+=============================== warnings summary ===============================
+/usr/local/lib/python3.6/dist-packages/_pytest/junitxml.py:436
+  /usr/local/lib/python3.6/dist-packages/_pytest/junitxml.py:436: PytestDeprecationWarning: The 'junit_family' default value will change to 'xunit2' in pytest 6.0.
+  Add 'junit_family=legacy' to your pytest.ini file to silence this warning and make your suite compatible.
+    _issue_warning_captured(deprecated.JUNIT_XML_DEFAULT_FAMILY, config.hook, 2)
+
+-- Docs: https://docs.pytest.org/en/latest/warnings.html
+- generated xml file: /kumarpradeep2008-1-ME_QEATS_REVIEW_MP-776c2e4c-3af8-11ea-922d-c385861c27d4/kumarpradeep2008-1-ME_QEATS_REVIEW_MP/tests.xml -
+========================= 3 failed, 1 warning in 6.54s =========================
+
+2020-01-19 20:15:58,460 unitTesting  INFO     Pytest run complete
+2020-01-19 20:15:58,475 unitTesting  INFO     Report generated: {'tests.test_views.TestSocialSharing.test_post_to_facebook_share_cli': 'TEST_STATUS_FAILURE', 'tests.test_views.TestSocialSharing.test_post_to_facebook_share': 'TEST_STATUS_FAILURE', 'tests.test_views.TestSocialSharing.test_post_to_pinterest_share': 'TEST_STATUS_FAILURE'}
